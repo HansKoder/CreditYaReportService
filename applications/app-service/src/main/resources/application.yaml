@@ -31,3 +31,6 @@ management:
         enabled: true
 cors:
   allowed-origins: "${CORS_ORIGIN_ALLOWED}"
+aws:
+  dynamodb:
+    endpoint: "http://localhost:8000"
