@@ -14,7 +14,7 @@ public class LoanReportUseCase implements ILoanReportUseCase {
 
     @Override
     public Mono<LoanReport> getReportLoanApproved() {
-        return null;
+        return repository.getReport(new LoanReportId("LOAN"));
     }
 
     @Override
