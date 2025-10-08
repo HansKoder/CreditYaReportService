@@ -125,3 +125,10 @@ aws dynamodb delete-item \
   --key '{"id": {"S": "LOAN"}}' \
   --endpoint-url http://localhost:4566
 ```
+
+
+### Create new image
+```cmd
+chmod +x build-image.sh
+./setup.sh
+```
