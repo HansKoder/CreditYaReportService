@@ -33,4 +33,10 @@ cors:
   allowed-origins: "${CORS_ORIGIN_ALLOWED}"
 aws:
   dynamodb:
-    endpoint: "http://localhost:8000"
+    endpoint: "${ADAPTER_DYNAMODB_REPORT_ENDPOINT}"
+
+report:
+  loan:
+    approved:
+      pk: "${REPORT_LOAN_APPROVED_PK}"
+      fk: "${REPORT_LOAN_APPROVED_FK}"

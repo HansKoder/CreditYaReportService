@@ -25,7 +25,8 @@ public class LoanApprovedMapper {
         logger.info("[infra.sqs-listener.mapper] (toCommand) (02) extract payload from messageBody Response=[ payload:{} ]", payload);
 
         return new UpdateReportLoanApprovedCommand(
-                loanApprovedProperties.reportNamePK(),
+                loanApprovedProperties.pk(),
+                loanApprovedProperties.sk(),
                 payload.amount()
         );
     }

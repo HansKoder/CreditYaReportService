@@ -1,7 +1,7 @@
 package org.pragma.creditya.dynamodb.helper;
 
-import org.pragma.creditya.dynamodb.DynamoDBTemplateAdapter;
-import org.pragma.creditya.dynamodb.ModelEntity;
+import org.pragma.creditya.dynamodb.LoanReportTemplateAdapter;
+import org.pragma.creditya.dynamodb.LoanReportEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -28,39 +28,39 @@ class TemplateAdapterOperationsTest {
     private ObjectMapper mapper;
 
     @Mock
-    private DynamoDbAsyncTable<ModelEntity> customerTable;
+    private DynamoDbAsyncTable<LoanReportEntity> customerTable;
 
-    private ModelEntity modelEntity;
+    private LoanReportEntity loanReportEntity;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        when(dynamoDbEnhancedAsyncClient.table("table_name", TableSchema.fromBean(ModelEntity.class)))
+        when(dynamoDbEnhancedAsyncClient.table("table_name", TableSchema.fromBean(LoanReportEntity.class)))
                 .thenReturn(customerTable);
 
-        modelEntity = new ModelEntity();
-        modelEntity.setId("id");
-        modelEntity.setCount(0);
+        loanReportEntity = new LoanReportEntity();
+        loanReportEntity.setId("id");
+        loanReportEntity.setCount(0);
     }
 
     @Test
     void modelEntityPropertiesMustNotBeNull() {
-        ModelEntity modelEntityUnderTest = new ModelEntity("id", 0);
+        LoanReportEntity loanReportEntityUnderTest = new LoanReportEntity("loan-report", "approved", 0);
 
-        assertNotNull(modelEntityUnderTest.getId());
-        assertNotNull(modelEntityUnderTest.getCount());
+        assertNotNull(loanReportEntityUnderTest.getId());
+        assertNotNull(loanReportEntityUnderTest.getCount());
     }
 
     @Test
     void testSave() {
-        when(customerTable.putItem(modelEntity)).thenReturn(CompletableFuture.runAsync(()->{}));
-        when(mapper.map(modelEntity, ModelEntity.class)).thenReturn(modelEntity);
+        when(customerTable.putItem(loanReportEntity)).thenReturn(CompletableFuture.runAsync(()->{}));
+        when(mapper.map(loanReportEntity, LoanReportEntity.class)).thenReturn(loanReportEntity);
 
-        DynamoDBTemplateAdapter dynamoDBTemplateAdapter =
-                new DynamoDBTemplateAdapter(dynamoDbEnhancedAsyncClient, mapper);
+        LoanReportTemplateAdapter loanReportTemplateAdapter =
+                new LoanReportTemplateAdapter(dynamoDbEnhancedAsyncClient, mapper);
 
-        StepVerifier.create(dynamoDBTemplateAdapter.save(modelEntity))
+        StepVerifier.create(loanReportTemplateAdapter.save(loanReportEntity))
                 .expectNextCount(1)
                 .verifyComplete();
     }
@@ -71,29 +71,29 @@ class TemplateAdapterOperationsTest {
 
         when(customerTable.getItem(
                 Key.builder().partitionValue(AttributeValue.builder().s(id).build()).build()))
-                .thenReturn(CompletableFuture.completedFuture(modelEntity));
-        when(mapper.map(modelEntity, Object.class)).thenReturn("value");
+                .thenReturn(CompletableFuture.completedFuture(loanReportEntity));
+        when(mapper.map(loanReportEntity, Object.class)).thenReturn("value");
 
-        DynamoDBTemplateAdapter dynamoDBTemplateAdapter =
-                new DynamoDBTemplateAdapter(dynamoDbEnhancedAsyncClient, mapper);
+        LoanReportTemplateAdapter loanReportTemplateAdapter =
+                new LoanReportTemplateAdapter(dynamoDbEnhancedAsyncClient, mapper);
 
-        StepVerifier.create(dynamoDBTemplateAdapter.getById("id"))
+        StepVerifier.create(loanReportTemplateAdapter.getById("id"))
                 .expectNext("value")
                 .verifyComplete();
     }
 
     @Test
     void testDelete() {
-        when(mapper.map(modelEntity, ModelEntity.class)).thenReturn(modelEntity);
-        when(mapper.map(modelEntity, Object.class)).thenReturn("value");
+        when(mapper.map(loanReportEntity, LoanReportEntity.class)).thenReturn(loanReportEntity);
+        when(mapper.map(loanReportEntity, Object.class)).thenReturn("value");
 
-        when(customerTable.deleteItem(modelEntity))
-                .thenReturn(CompletableFuture.completedFuture(modelEntity));
+        when(customerTable.deleteItem(loanReportEntity))
+                .thenReturn(CompletableFuture.completedFuture(loanReportEntity));
 
-        DynamoDBTemplateAdapter dynamoDBTemplateAdapter =
-                new DynamoDBTemplateAdapter(dynamoDbEnhancedAsyncClient, mapper);
+        LoanReportTemplateAdapter loanReportTemplateAdapter =
+                new LoanReportTemplateAdapter(dynamoDbEnhancedAsyncClient, mapper);
 
-        StepVerifier.create(dynamoDBTemplateAdapter.delete(modelEntity))
+        StepVerifier.create(loanReportTemplateAdapter.delete(loanReportEntity))
                 .expectNext("value")
                 .verifyComplete();
     }

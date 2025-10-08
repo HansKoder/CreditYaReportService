@@ -2,19 +2,12 @@ package org.pragma.creditya.model.loanreport.valueobject;
 
 import org.pragma.creditya.model.loanreport.exception.LoanReportDomainException;
 
-public record Count (Integer value) {
+public record ReportNameSK (String value) {
 
-    public Count {
+    public ReportNameSK {
         if (value == null)
             throw new LoanReportDomainException("Count must be mandatory");
 
-        if (value < 0)
-            throw new LoanReportDomainException("Count must be positive");
-
-    }
-
-    public Count increment () {
-        return new Count(value + 1);
     }
 
 }
