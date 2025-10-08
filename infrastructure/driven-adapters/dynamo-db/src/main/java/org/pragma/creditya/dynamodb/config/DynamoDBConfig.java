@@ -18,9 +18,10 @@ public class DynamoDBConfig {
 
     @Bean
     @Profile({"local"})
-    public DynamoDbAsyncClient amazonDynamoDB(@Value("${aws.dynamodb.endpoint}") String endpoint,
-                                              @Value("${aws.region}") String region,
-                                              MetricPublisher publisher) {
+    public DynamoDbAsyncClient amazonDynamoDB(
+            @Value("${aws.dynamodb.endpoint}") String endpoint,
+            @Value("${aws.region}") String region,
+            MetricPublisher publisher) {
         return DynamoDbAsyncClient.builder()
                 .credentialsProvider(ProfileCredentialsProvider.create("default"))
                 .region(Region.of(region))

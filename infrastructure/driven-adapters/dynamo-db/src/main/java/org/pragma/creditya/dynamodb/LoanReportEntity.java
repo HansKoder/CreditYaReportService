@@ -28,7 +28,6 @@ public class LoanReportEntity {
         this.id = id;
     }
 
-    @DynamoDbSortKey
     @DynamoDbAttribute("name")
     public String getName() {
         return name;

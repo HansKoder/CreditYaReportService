@@ -1,12 +1,11 @@
 package org.pragma.creditya.dynamodb;
 
-import org.pragma.creditya.dynamodb.helper.CustomMapper;
 import org.pragma.creditya.dynamodb.helper.TemplateAdapterOperations;
 import org.pragma.creditya.model.loanreport.LoanReport;
 import org.pragma.creditya.model.loanreport.gateways.LoanReportRepository;
 import org.pragma.creditya.model.loanreport.valueobject.LoanReportId;
-import org.pragma.creditya.model.loanreport.valueobject.ReportNameSK;
-import org.reactivecommons.utils.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedAsyncClient;
@@ -21,27 +20,26 @@ import java.util.List;
 public class LoanReportTemplateAdapter
         extends TemplateAdapterOperations<
             LoanReport /*domain model  (E)*/,
-            String, /* PK (K) */
-            LoanReportEntity /*adapter model (V) */
+            String, /* PK (K)*/
+            LoanReportEntity /*adapter model (V)*/
         > implements LoanReportRepository /* implements Gateway from domain */ {
 
-    public LoanReportTemplateAdapter(DynamoDbEnhancedAsyncClient connectionFactory, CustomMapper<LoanReport, LoanReportEntity> mapper) {
+    private final Logger logger = LoggerFactory.getLogger(LoanReportTemplateAdapter.class);
+
+    public LoanReportTemplateAdapter(
+            DynamoDbEnhancedAsyncClient connectionFactory,
+            LoanReportMapper mapper) {
         super(
                 connectionFactory,
                 mapper,
                 mapper::toEntity, // d -> mapper.toData(d, Object.class /*domain model*/),
-                "reports" /* table_name*/,
-                "" /*index is optional*/);
+                "reports" /* table_name*/
+                 /*index is optional*/);
     }
 
     public Mono<List<LoanReport>> getEntityBySomeKeys(String partitionKey, String sortKey) {
         QueryEnhancedRequest queryExpression = generateQueryExpression(partitionKey, sortKey);
         return query(queryExpression);
-    }
-
-    public Mono<List<LoanReport>> getEntityBySomeKeysByIndex(String partitionKey, String sortKey) {
-        QueryEnhancedRequest queryExpression = generateQueryExpression(partitionKey, sortKey);
-        return queryByIndex(queryExpression, "secondary_index" /*index is optional if you define in constructor*/);
     }
 
     private QueryEnhancedRequest generateQueryExpression(String partitionKey, String sortKey) {
@@ -52,12 +50,18 @@ public class LoanReportTemplateAdapter
     }
 
     @Override
-    public Mono<LoanReport> getReport(LoanReportId pk, ReportNameSK sk) {
-        return null;
+    public Mono<LoanReport> getReport(LoanReportId pk) {
+        logger.info("[infra.adapter.dynamodb] (getReport) payload=[ pk:{} ]", pk);
+        return this.getById(pk.getValue())
+                .doOnSuccess(response -> logger.info("[infra.adapter.dynamodb] (getReport) success, response=[ entity:{} ]", response))
+                .doOnError(err -> logger.info("[infra.adapter.dynamodb] (getReport) error, response=[ error:{} ]", err.getMessage()));
     }
 
     @Override
-    public Mono<LoanReport> updateReport(LoanReportId pk, ReportNameSK sk) {
-        return null;
+    public Mono<LoanReport> updateReport(LoanReport entity) {
+        logger.info("[infra.adapter.dynamodb] (updateReport) payload=[ entity:{} ]", entity);
+        return save(entity)
+                .doOnSuccess(response -> logger.info("[infra.adapter.dynamodb] (updateReport) success, response=[ entity:{} ]", response))
+                .doOnError(err -> logger.info("[infra.adapter.dynamodb] (updateReport) error, response=[ error:{} ]", err.getMessage()));
     }
 }

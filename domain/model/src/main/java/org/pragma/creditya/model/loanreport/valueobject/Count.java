@@ -14,6 +14,7 @@ public record Count (Integer value) {
     }
 
     public Count increment () {
+        System.out.println("Increment current value " + value + " should be incremented");
         return new Count(value + 1);
     }
 

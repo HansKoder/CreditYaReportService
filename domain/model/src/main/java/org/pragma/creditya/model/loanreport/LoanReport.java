@@ -1,14 +1,13 @@
 package org.pragma.creditya.model.loanreport;
 
-import lombok.Data;
 import org.pragma.creditya.model.loanreport.valueobject.Count;
 import org.pragma.creditya.model.loanreport.valueobject.LoanReportId;
-import org.pragma.creditya.model.loanreport.valueobject.ReportNameSK;
+import org.pragma.creditya.model.loanreport.valueobject.ReportName;
 import org.pragma.creditya.model.shared.domain.model.entity.AggregateRoot;
 
 public class LoanReport extends AggregateRoot<LoanReportId> {
 
-    private ReportNameSK name;
+    private ReportName name;
     private Count count;
 
     private LoanReport(Builder builder) {
@@ -18,11 +17,13 @@ public class LoanReport extends AggregateRoot<LoanReportId> {
     }
 
     // Business Rules
-    private void updateReport () {
-        count =  count.increment();
+    public void updateReport () {
+        System.out.println("[domain.report] (updateReport) count init payload=[ count:{" + count + "}]");
+        count = count.increment();
+        System.out.println("[domain.report] (updateReport) count incremented response=[ count:{" + count + "}]");
     }
 
-    // Getters and Setters
+    // Getters & Setters
     public Count getCount() {
         return count;
     }
@@ -31,24 +32,24 @@ public class LoanReport extends AggregateRoot<LoanReportId> {
         this.count = count;
     }
 
-    public ReportNameSK getName() {
+    public ReportName getName() {
         return name;
     }
 
-    public void setName(ReportNameSK name) {
+    public void setName(ReportName name) {
         this.name = name;
     }
 
     // Builder
     public static final class Builder {
         private Count count;
-        private ReportNameSK name;
+        private ReportName name;
         private LoanReportId id;
 
         private Builder() {
         }
 
-        public static Builder aLoanReport() {
+        public static Builder any() {
             return new Builder();
         }
 
@@ -58,7 +59,7 @@ public class LoanReport extends AggregateRoot<LoanReportId> {
         }
 
         public Builder name(String name) {
-            this.name = new ReportNameSK(name);
+            this.name = new ReportName(name);
             return this;
         }
 
