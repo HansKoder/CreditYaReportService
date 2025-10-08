@@ -1,43 +1,36 @@
 package org.pragma.creditya.model.loanreport;
 
+import lombok.Getter;
+import lombok.ToString;
+import org.pragma.creditya.model.loanreport.valueobject.Amount;
 import org.pragma.creditya.model.loanreport.valueobject.Count;
 import org.pragma.creditya.model.loanreport.valueobject.LoanReportId;
 import org.pragma.creditya.model.loanreport.valueobject.ReportName;
 import org.pragma.creditya.model.shared.domain.model.entity.AggregateRoot;
 
+import java.math.BigDecimal;
+
+@Getter
+@ToString
 public class LoanReport extends AggregateRoot<LoanReportId> {
 
-    private ReportName name;
+    private final ReportName name;
     private Count count;
+    private Amount totalApprovedAmount;
 
     private LoanReport(Builder builder) {
         this.setId(builder.id);
-        this.setName(builder.name);
-        this.setCount(builder.count);
+        this.name = builder.name;
+        this.count = builder.count;
+        this.totalApprovedAmount = builder.totalApprovedAmount;
     }
 
     // Business Rules
-    public void updateReport () {
-        System.out.println("[domain.report] (updateReport) count init payload=[ count:{" + count + "}]");
+    public void updateReport (Amount amountApproved) {
+        System.out.println("[domain.report] (updateReport) count init payload=[ count:{" + count + "}, totalApprovedAmount:{" + totalApprovedAmount + "}]");
         count = count.increment();
-        System.out.println("[domain.report] (updateReport) count incremented response=[ count:{" + count + "}]");
-    }
-
-    // Getters & Setters
-    public Count getCount() {
-        return count;
-    }
-
-    public void setCount(Count count) {
-        this.count = count;
-    }
-
-    public ReportName getName() {
-        return name;
-    }
-
-    public void setName(ReportName name) {
-        this.name = name;
+        totalApprovedAmount = totalApprovedAmount.plus(amountApproved);
+        System.out.println("[domain.report] (updateReport) count incremented response=[ count:{" + count + "}, totalApprovedAmount:{" + totalApprovedAmount + "}]");
     }
 
     // Builder
@@ -45,6 +38,7 @@ public class LoanReport extends AggregateRoot<LoanReportId> {
         private Count count;
         private ReportName name;
         private LoanReportId id;
+        private Amount totalApprovedAmount;
 
         private Builder() {
         }
@@ -68,16 +62,15 @@ public class LoanReport extends AggregateRoot<LoanReportId> {
             return this;
         }
 
+        public Builder totalApprovedAmount(BigDecimal value) {
+            this.totalApprovedAmount = new Amount(value);
+            return this;
+        }
+
         public LoanReport build() {
             return new LoanReport(this);
         }
+
     }
 
-    @Override
-    public String toString() {
-        return "LoanReport{" +
-                "count=" + count +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
