@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 9085
 spring:
   application:
     name: "CreditYaReportService"
@@ -10,12 +10,13 @@ spring:
       enabled: true
       path: "/h2"
   profiles:
+    active: ${PROFILE:local}
     include: null
 entrypoint:
   sqs:
-    region: "us-east-1"
-    endpoint: "http://localhost:4566"
-    queueUrl: "http://localhost:4566/000000000000/sample"
+    region: "${ENTRYPOINT_SQS_REPORT_REGION}"
+    queueUrl: "${ENTRYPOINT_SQS_REPORT_QUEUE_URL}"
+    endpoint: "${ENTRYPOINT_SQS_REPORT_ENDPOINT}"
     waitTimeSeconds: 20
     maxNumberOfMessages: 10
     visibilityTimeoutSeconds: 10
@@ -30,4 +31,18 @@ management:
       probes:
         enabled: true
 cors:
-  allowed-origins: "http://localhost:4200,http://localhost:8080"
+  allowed-origins: "${CORS_ORIGIN_ALLOWED}"
+aws:
+  dynamodb:
+    endpoint: "${ADAPTER_DYNAMODB_REPORT_ENDPOINT}"
+  region: "${AWS_REGION}"
+
+report:
+  loan:
+    approved:
+      pk: "${REPORT_LOAN_APPROVED_PK}"
+      sk: "${REPORT_LOAN_APPROVED_SK}"
+
+jwt:
+  secret: "${JWT_SECRET_KEY}"
+  expiration: "${JWT_EXPIRATION}"

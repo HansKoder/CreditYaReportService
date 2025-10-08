@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.pragma.creditya.sqs.listener.loan.mapper.LoanApprovedMapper;
+import org.pragma.creditya.usecase.loanreport.ILoanReportUseCase;
 import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
@@ -28,6 +30,12 @@ class SQSListenerTest {
 
     @Mock
     private SQSProperties sqsProperties;
+
+    @Mock
+    private ILoanReportUseCase useCase;
+
+    @Mock
+    private LoanApprovedMapper mapper;
 
     @BeforeEach
     void setUp() {
@@ -58,7 +66,7 @@ class SQSListenerTest {
         var sqsListener = SQSListener.builder()
                 .client(asyncClient)
                 .properties(sqsProperties)
-                .processor(new SQSProcessor())
+                .processor(new SQSProcessor(useCase, mapper))
                 .operation("operation")
                 .build();
 
