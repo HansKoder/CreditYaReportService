@@ -14,11 +14,12 @@ public class LoanReportMapper implements CustomMapper<LoanReport, LoanReportEnti
     @Override
     public LoanReportEntity toData(LoanReport entity) {
         logger.info("[infra.adapter.dynamodb.mapper] (toData) payload=[ entity:{} ]", entity);
-        LoanReportEntity data = new LoanReportEntity(
-                entity.getId().getValue(),
-                entity.getName().value(),
-                entity.getCount().value()
-        );
+        LoanReportEntity data = LoanReportEntity.Builder.any()
+                .id(entity.getId().getValue())
+                .name(entity.getName().value())
+                .count(entity.getCount().value())
+                .totalAmountApproved(entity.getTotalApprovedAmount().value())
+                .build();
 
         logger.info("[infra.adapter.dynamodb.mapper] (toData) mapped to data, response=[ data:{} ]", data);
 
@@ -33,6 +34,7 @@ public class LoanReportMapper implements CustomMapper<LoanReport, LoanReportEnti
                 .id(data.getId())
                 .name(data.getName())
                 .count(data.getCount())
+                .totalApprovedAmount(data.getTotalAmountApproved())
                 .build();
 
         logger.info("[infra.adapter.dynamodb.mapper] (toEntity) mapped to entity, response=[ entity:{} ]", entity);

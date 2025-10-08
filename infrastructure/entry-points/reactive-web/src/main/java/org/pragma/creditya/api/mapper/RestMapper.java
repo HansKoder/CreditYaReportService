@@ -6,7 +6,11 @@ import org.pragma.creditya.model.loanreport.LoanReport;
 public class RestMapper {
 
     public static ReportLoanApprovedResponse toResponse (LoanReport domain) {
-        return new ReportLoanApprovedResponse(domain.getId().getValue(), domain.getCount().value());
+        return new ReportLoanApprovedResponse(
+            domain.getId().getValue(),
+            domain.getCount().value(),
+            domain.getTotalApprovedAmount().value()
+        );
     }
 
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.pragma.creditya.model.loanreport.LoanReport;
 import org.pragma.creditya.model.loanreport.exception.LoanReportNotFoundDomainException;
 import org.pragma.creditya.model.loanreport.gateways.LoanReportRepository;
+import org.pragma.creditya.model.loanreport.valueobject.Amount;
 import org.pragma.creditya.model.loanreport.valueobject.LoanReportId;
 import org.pragma.creditya.usecase.loanreport.command.UpdateReportLoanApprovedCommand;
 import reactor.core.publisher.Mono;
@@ -24,7 +25,7 @@ public class LoanReportUseCase implements ILoanReportUseCase {
         return repository.getReport(new LoanReportId(command.pk()))
                 .switchIfEmpty(loanReportInit(command))
                 .map(domain -> {
-                    domain.updateReport();
+                    domain.updateReport(new Amount(command.amount()));
                     return domain;
                 })
                 .flatMap(repository::updateReport)

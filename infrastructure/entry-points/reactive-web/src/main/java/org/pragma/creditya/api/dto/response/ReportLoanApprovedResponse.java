@@ -1,6 +1,9 @@
 package org.pragma.creditya.api.dto.response;
 
+import java.math.BigDecimal;
+
 public record ReportLoanApprovedResponse (
     String reportName,
-    Integer totalApprovedLoans
+    Integer totalLoansApproved,
+    BigDecimal amountLoansApproved
 ) { }
