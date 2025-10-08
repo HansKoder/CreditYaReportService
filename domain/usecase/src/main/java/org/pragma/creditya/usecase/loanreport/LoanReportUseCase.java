@@ -9,6 +9,8 @@ import org.pragma.creditya.model.loanreport.valueobject.LoanReportId;
 import org.pragma.creditya.usecase.loanreport.command.UpdateReportLoanApprovedCommand;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
+
 @RequiredArgsConstructor
 public class LoanReportUseCase implements ILoanReportUseCase {
 
@@ -37,6 +39,7 @@ public class LoanReportUseCase implements ILoanReportUseCase {
                 .id(command.pk())
                 .name(command.sk())
                 .count(0)
+                .totalApprovedAmount(BigDecimal.ZERO)
                 .build();
 
         return Mono.just(domain);
