@@ -7,5 +7,9 @@ meta {
 get {
   url: http://localhost:9085/api/v1/report/loans-approved
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGNyZWRpdC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiQURNSU4ifV0sImlhdCI6MTc1OTg5NzQ2OSwiZXhwIjoxNzU5OTAxMDY5fQ.o76WMAbojCcz8om-Bgn9IIiCiY8n4oC2FBvJTlNUu5c
 }

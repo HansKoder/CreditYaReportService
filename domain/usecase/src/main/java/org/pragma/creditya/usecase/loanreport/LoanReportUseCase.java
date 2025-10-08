@@ -2,6 +2,7 @@ package org.pragma.creditya.usecase.loanreport;
 
 import lombok.RequiredArgsConstructor;
 import org.pragma.creditya.model.loanreport.LoanReport;
+import org.pragma.creditya.model.loanreport.exception.LoanReportNotFoundDomainException;
 import org.pragma.creditya.model.loanreport.gateways.LoanReportRepository;
 import org.pragma.creditya.model.loanreport.valueobject.LoanReportId;
 import org.pragma.creditya.usecase.loanreport.command.UpdateReportLoanApprovedCommand;
@@ -14,7 +15,8 @@ public class LoanReportUseCase implements ILoanReportUseCase {
 
     @Override
     public Mono<LoanReport> getReportLoanApproved() {
-        return repository.getReport(new LoanReportId("LOAN"));
+        return repository.getReport(new LoanReportId("LOAN"))
+                .switchIfEmpty(Mono.error(new LoanReportNotFoundDomainException("Report is not found")));
     }
 
     @Override

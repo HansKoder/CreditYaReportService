@@ -116,3 +116,12 @@ aws dynamodb scan \
   --endpoint-url http://localhost:4566
 
 ```
+
+## DynamoDB 
+
+```bash
+aws dynamodb delete-item \
+  --table-name reports \
+  --key '{"id": {"S": "LOAN"}}' \
+  --endpoint-url http://localhost:4566
+```

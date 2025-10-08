@@ -42,3 +42,7 @@ report:
     approved:
       pk: "${REPORT_LOAN_APPROVED_PK}"
       sk: "${REPORT_LOAN_APPROVED_SK}"
+
+jwt:
+  secret: "${JWT_SECRET_KEY}"
+  expiration: "${JWT_EXPIRATION}"
