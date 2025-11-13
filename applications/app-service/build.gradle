@@ -17,7 +17,7 @@ dependencies {
 
     // Env vars
     implementation 'me.paulschwarz:spring-dotenv:4.0.0'
-    testImplementation 'me.paulschwarz:spring-dotenv:4.0.0'
+    testImplementation 'me.paulschwarz:spring-v:4.0.0'
 }
 
 tasks.register('explodedJar', Copy) {
